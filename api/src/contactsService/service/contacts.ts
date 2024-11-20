@@ -54,6 +54,7 @@ export class ContactsController {
   }
 
   @Post()
+  @UseInterceptors(FileInterceptor(''))
   async createContact(@Body() contact:Contact) {
     const errors = validatePartialContact(contact);
     if (errors.length > 0) {
