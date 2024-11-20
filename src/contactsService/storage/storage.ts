@@ -1,3 +1,4 @@
+
 export interface Store {
   getContacts(
     filters: any,
@@ -7,3 +8,4 @@ export interface Store {
   updateContact(id: number, contact: any): Promise<any>;
   getContact(id: number): Promise<any>;
 }
+

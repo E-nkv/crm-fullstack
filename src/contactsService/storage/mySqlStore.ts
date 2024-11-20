@@ -1,10 +1,10 @@
 import { Store } from './storage';
-import { DataSource, Repository } from 'typeorm';
+import { DataSource, DataSourceOptions, Repository } from 'typeorm';
 import { Contact } from '../service/contact.entity';
-import * as dotenv from 'dotenv';
+//import * as dotenv from 'dotenv';
 import { faker } from '@faker-js/faker';
 
-dotenv.config();
+//stuck here :(
 class MySqlStore implements Store {
   private dataSource: DataSource;
   private contactRepo: Repository<Contact>;
@@ -57,16 +57,19 @@ class MySqlStore implements Store {
   }
 
   async init() {
-    this.dataSource = new DataSource({
+    const dbConf: DataSourceOptions = {
       type: 'mysql',
-      host: process.env.DB_HOST || 'localhost',
-      port: Number(process.env.DB_PORT) || 3306,
-      username: process.env.DB_USER || 'root',
-      password: process.env.DB_PASSWORD || '',
-      database: process.env.DB_NAME || 'crm',
+      host: 'localhost',
+      port: 3306,
+      username: 'root',
+      password: 'admin',
+      database: 'crm',
       entities: [Contact],
       synchronize: true,
-    });
+    };
+
+    this.dataSource = new DataSource(dbConf);
+    console.log(dbConf);
 
     await this.dataSource.initialize();
     this.contactRepo = this.dataSource.getRepository(Contact);

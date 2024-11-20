@@ -35,29 +35,29 @@ export function validatePartialContact(contact: {
 
 function validateFirstName(name: string): string | null {
   const nameRegex = /^[A-Za-z]+$/;
-  return nameRegex.test(name) ? null : 'First name can only contain letters';
+  return nameRegex.test(name.trim()) ? null : 'First name can only contain letters';
 }
 
 function validateLastName(name: string): string | null {
   const nameRegex = /^[A-Za-z]+$/;
-  return nameRegex.test(name) ? null : 'Last name can only contain letters';
+  return nameRegex.test(name.trim()) ? null : 'Last name can only contain letters';
 }
 
 function validateEmail(email: string): string | null {
   const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-  return emailRegex.test(email) ? null : 'Invalid email format';
+  return emailRegex.test(email.trim()) ? null : 'Invalid email format';
 }
 
 function validatePhone(phone: string): string | null {
   const phoneRegex = /^\+?[0-9]*$/;
-  return phoneRegex.test(phone)
+  return phoneRegex.test(phone.trim())
     ? null
     : 'Phone number can only contain numbers and an optional leading plus sign';
 }
 
 function validateStatus(status: string): string | null {
   const validStatuses = ['New', 'Contacted', 'Qualified', 'Lost'];
-  return validStatuses.includes(status)
+  return validStatuses.includes(status.trim())
     ? null
     : `Status must be one of ${validStatuses.join(', ')}`;
 }
