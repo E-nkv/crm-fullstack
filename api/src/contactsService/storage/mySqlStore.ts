@@ -3,6 +3,7 @@ import { DataSource, DataSourceOptions, Repository } from 'typeorm';
 import { Contact } from '../service/contact.entity';
 //import * as dotenv from 'dotenv';
 import { faker } from '@faker-js/faker';
+import {Filters} from './../service/contacts'
 
 //stuck here :(
 class MySqlStore implements Store {
@@ -76,7 +77,7 @@ class MySqlStore implements Store {
   }
 
   async getContacts(
-    filters: any,
+    filters: Filters,
     pagination: { limit: number; offset: number },
   ) {
     const queryBuilder = this.contactRepo.createQueryBuilder('contact');
@@ -113,11 +114,11 @@ class MySqlStore implements Store {
     }
 
     queryBuilder.skip(pagination.offset).take(pagination.limit);
-
-    return await queryBuilder.getMany();
+    const res = await queryBuilder.getMany()
+    return new Promise<[Contact[], number]>(()=>{return [res, 100]})  //for the linter to not complain
   }
 
-  async createContact(contact: any) {
+  async createContact(contact: Contact) {
     const newContact = this.contactRepo.create(contact);
     const savedContact = await this.contactRepo.save({
       ...newContact,
@@ -127,7 +128,7 @@ class MySqlStore implements Store {
     return savedContact;
   }
 
-  async updateContact(id: number, contact: any) {
+  async updateContact(id: number, contact: Contact) {
     contact.updatedAt = new Date();
     await this.contactRepo.update(id, contact);
     return await this.contactRepo.findOne({ where: { id } });

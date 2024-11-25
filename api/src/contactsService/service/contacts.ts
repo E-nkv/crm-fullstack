@@ -36,11 +36,11 @@ export class ContactsController {
     @Query('offset') offset,
   ) {
     try {
-      const contacts = await store.getContacts(filters, {
-        limit: limit!=undefined? Number(limit) : 20,
+      const [contacts, count] = await store.getContacts(filters, {
+        limit: limit!=undefined? Number(limit) : 10,
         offset: offset!=undefined? Number(offset): 0,
       });
-      return contacts;
+      return {contacts, count};
     } catch (err) {
       console.log('error with getting contacts', err);
       throw new HttpException(
@@ -81,10 +81,9 @@ export class ContactsController {
   @Put(':id')
   @UseInterceptors(FileInterceptor(''))
   async updateContact(@Param('id') id, @Body() contact :Partial<Contact>) {
-    console.log(id)
-    console.log(contact)
+
     const errors = validatePartialContact(contact);
-    let n = Number(id)
+    const n = Number(id)
     if (isNaN(n) || n < 0) {
       throw new HttpException(
         { status: HttpStatus.BAD_REQUEST, error: "invalid contact id"},
@@ -98,8 +97,9 @@ export class ContactsController {
       );
     }
     try {
-      const updatedContact = await store.updateContact(Number(id), contact);
+      const updatedContact = await store.updateContact(n, contact);
       if (!updatedContact) {
+        
         throw new HttpException(
           {
             status: HttpStatus.NOT_FOUND,
@@ -110,6 +110,7 @@ export class ContactsController {
       }
       return updatedContact;
     } catch (error) {
+      console.log(error)
       if (error.status === HttpStatus.NOT_FOUND) {
         throw error;
       }

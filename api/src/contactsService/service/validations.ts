@@ -49,7 +49,7 @@ function validateEmail(email: string): string | null {
 }
 
 function validatePhone(phone: string): string | null {
-  const phoneRegex = /^\+?[0-9]*$/;
+  const phoneRegex = /^\(?\d{3}\)?[-.\s]?\d{3}[-.\s]?\d{4}$|^\d{8,15}$/;
   return phoneRegex.test(phone.trim())
     ? null
     : 'Phone number can only contain numbers and an optional leading plus sign';

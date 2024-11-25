@@ -32,12 +32,14 @@ export class InMemStore implements Store {
       const company = faker.helpers.arrayElement(sharedCompanies);
       const position = faker.helpers.arrayElement(sharedPositions);
   
+      const p = faker.phone.number({style:'national'})
       const contact: Contact = {
         id: i + 1,
         firstName: `${firstName}${faker.string.alpha(2)}`,  // Adding random characters to ensure sharing
         lastName: `${lastName}${faker.string.alpha(2)}`,    // Adding random characters to ensure sharing
-        email: faker.internet.email(),
-        phone: faker.phone.number(),
+        phone: p,
+        email: `${firstName}${p.slice(p.length - 2, p.length)}.${lastName.slice(0, 3)}@${firstName[0]}mail.com`,
+  
         company: `${company}${faker.string.alpha(2)}`,      // Adding random characters to ensure sharing
         position :`${position}${faker.string.alpha(2)}`,
         status: faker.helpers.arrayElement(['New', 'Contacted', 'Qualified', 'Lost']),
@@ -53,7 +55,7 @@ export class InMemStore implements Store {
   async getContacts(
     filters: Filters,
     pagination: { limit: number; offset: number },
-  ): Promise<Contact[]> {
+  ): Promise<[Contact[], number]> {
     let filteredContacts = this.contacts;
 
     // Apply filters
@@ -93,8 +95,8 @@ export class InMemStore implements Store {
     const end = start + pagination.limit;
 
     const res = filteredContacts.slice(start, end);
-    console.log(res);
-    return res;
+    console.log(`effectively got ${res.length} contacts.`)
+    return [res, filteredContacts.length];
   }
 
   async createContact(contact: Contact): Promise<Contact> {
@@ -105,11 +107,12 @@ export class InMemStore implements Store {
       updatedAt: new Date(),
     };
     this.contacts.push(newContact);
+    console.log(`effectively created newContact with firstName ${newContact.firstName} and lastName ${newContact.lastName}.`)
     return newContact;
   }
 
   async updateContact(id: number, contact: Partial<Contact>): Promise<Contact> {
-    const index = this.contacts.findIndex((c) => c.id === id);
+    const index = this.contacts.findIndex((c) => c.id == id);
     if (index === -1) {
       throw new Error('Contact not found');
     }
@@ -120,6 +123,7 @@ export class InMemStore implements Store {
       updatedAt: new Date(),
     };
     this.contacts[index] = updatedContact;
+    console.log(`Effectively updated contact with id: ${updatedContact.id}, and firstName: ${updatedContact.firstName}`)
     return updatedContact;
   }
 

@@ -1,11 +1,13 @@
+import { Contact } from "../service/contact.entity";
+import { Filters } from "../service/contacts";
 
 export interface Store {
   getContacts(
-    filters: any,
+    filters: Filters,
     pagination: { limit: number; offset: number },
-  ): Promise<any>;
-  createContact(contact: any): Promise<any>;
-  updateContact(id: number, contact: any): Promise<any>;
-  getContact(id: number): Promise<any>;
+  ): Promise<[Contact[], number]>;
+  createContact(contact: Contact): Promise<Contact>;
+  updateContact(id: number, contact: Contact): Promise<Contact>;
+  getContact(id: number): Promise<Contact>;
 }
 
