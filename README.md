@@ -34,7 +34,7 @@ Ensure you have the following installed:
     cd client
     npm install
 
-5. Run the api (runs the api at port localhost:8080)
+5. Run the api (runs the api at localhost:8080)
     ```bash
     cd api 
     npm start
@@ -63,3 +63,7 @@ For the client, inside src, we have the main "App" component, and all of the req
 - **NestJS**: 10.0.0 
 - **Drizzle ORM**: 0.36.3 (optional)
 - **TypeORM**: 0.3.20 (optional)
+
+
+### GitHub Profile
+Check out my GitHub profile [here](https://github.com/E-nkv) for more projects and updates.
